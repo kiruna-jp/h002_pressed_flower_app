@@ -147,7 +147,7 @@ class FlowerApp extends StatefulWidget {
 
 class _FlowerAppState extends State<FlowerApp> {
   // ★ 後ほどVercelにデプロイしたあとのURLへ書き換えます
-  final String vercelApiUrl = 'https://YOUR-VERCEL-APP.vercel.app/api/generate';
+  final String vercelApiUrl = 'https://h002-pressed-flower-app.vercel.app/api/generate';
 
   Uint8List? _selectedImageBytes;
   String? _resultImageUrl;
