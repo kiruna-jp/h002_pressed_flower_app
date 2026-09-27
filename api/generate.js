@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'REPLICATE_API_TOKEN is not configured in Vercel' });
     }
 
-    // 1. Replicateの /v1/files エンドポイントへ画像アップロード
+    // 1. Replicateの /v1/files エンドポイントへ画像アップロード[cite: 12]
     const buffer = Buffer.from(imageBase64, 'base64');
     const blob = new Blob([buffer], { type: 'image/jpeg' });
     const formData = new FormData();
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
 
     const uploadedImageUrl = uploadData.urls.get;
 
-    // 2. 画面から取得した正確なバージョンハッシュを使用
+    // 2. 画面から取得した正確なバージョンハッシュを使用（パラメータをシンプル化）[cite: 12]
     const predictionRes = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
@@ -66,9 +66,6 @@ export default async function handler(req, res) {
         input: {
           image: uploadedImageUrl,
           prompt: 'pressed flower style, botanical art, dried realistic flower petals, elegant vintage layout, high resolution, detailed texture',
-          negative_prompt: 'ugly, blurry, low quality, distorted',
-          prompt_strength: 0.45,
-          num_inference_steps: 25,
         },
       }),
     });
