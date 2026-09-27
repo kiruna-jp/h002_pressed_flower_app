@@ -80302,7 +80302,7 @@ p=4
 g=n.e
 g.toString
 m=B.ly.gFS().e_(g)
-g=A.fn("https://YOUR-VERCEL-APP.vercel.app/api/generate")
+g=A.fn("https://h002-pressed-flower-app.vercel.app/api/generate")
 f=t.N
 e=A.ah(["Content-Type","application/json"],f,f)
 s=7
