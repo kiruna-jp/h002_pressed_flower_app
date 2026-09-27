@@ -146,8 +146,9 @@ class FlowerApp extends StatefulWidget {
 }
 
 class _FlowerAppState extends State<FlowerApp> {
-  // ★ 後ほどVercelにデプロイしたあとのURLへ書き換えます
   final String vercelApiUrl = 'https://h002-pressed-flower-app.vercel.app/api/generate';
+  // ポーリング用のVercel APIエンドポイント
+  final String vercelPollUrl = 'https://h002-pressed-flower-app.vercel.app/api/poll';
 
   Uint8List? _selectedImageBytes;
   String? _resultImageUrl;
@@ -220,7 +221,14 @@ class _FlowerAppState extends State<FlowerApp> {
     while (true) {
       await Future.delayed(const Duration(seconds: 2));
 
-      final response = await http.get(Uri.parse(getUrl));
+      // 修正: 直接Replicateを叩かず、Vercelの /api/poll を経由して結果を取得する
+      final pollUri = Uri.parse('$vercelPollUrl?url=${Uri.encodeComponent(getUrl)}');
+      final response = await http.get(pollUri);
+      
+      if (response.statusCode != 200) {
+        continue; // 一時的な通信エラーなどはスキップしてリトライ
+      }
+
       final data = jsonDecode(response.body);
       String status = data['status'];
 
