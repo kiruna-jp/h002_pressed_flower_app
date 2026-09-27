@@ -54,7 +54,7 @@ export default async function handler(req, res) {
 
     const uploadedImageUrl = uploadData.urls.get;
 
-    // 2. 確実にアクセス可能な Stable Diffusion v1.5 の安定バージョン
+    // 2. 画面から取得した正確なバージョンハッシュを使用
     const predictionRes = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
@@ -62,11 +62,12 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        version: '72782414dbe76af15a92129881648b2d18471b05973e0473f26038a834c321d0',
+        version: '683d19dc312f7a9f0428b04429a9ccefd28dbf7785fef083ad5cf991b65f406f',
         input: {
           image: uploadedImageUrl,
           prompt: 'pressed flower style, botanical art, dried realistic flower petals, elegant vintage layout, high resolution, detailed texture',
           negative_prompt: 'ugly, blurry, low quality, distorted',
+          prompt_strength: 0.45,
           num_inference_steps: 25,
         },
       }),
