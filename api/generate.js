@@ -1,6 +1,5 @@
 // api/generate.js
 export default async function handler(req, res) {
-  // CORS設定（Flutter Webからの通信を許可）
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
@@ -55,7 +54,8 @@ export default async function handler(req, res) {
 
     const uploadedImageUrl = uploadData.urls.get;
 
-    // 2. ControlNetモデルへ予測リクエストを送信
+    // 2. バージョン指定ではなくモデル名（例: stability-ai/sdxlなど）で予測リクエストを送信
+    // ※もし別のモデル名を使いたい場合はここの model を書き換えます
     const predictionRes = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
@@ -63,13 +63,12 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        version: 'bfaf7d9e235edabd87c48974a974b2f21136b69b76922312b1d3f972b2046ff9',
+        model: 'stability-ai/sdxl', // またはお使いのモデル名
         input: {
           image: uploadedImageUrl,
           prompt: 'pressed flower style, botanical art, dried realistic flower petals, elegant vintage layout, high resolution, detailed texture',
           negative_prompt: 'ugly, blurry, low quality, distorted',
           num_inference_steps: 25,
-          condition_scale: 0.7,
         },
       }),
     });
