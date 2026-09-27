@@ -1,4 +1,3 @@
-// api/poll.js
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -13,14 +12,17 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
   try {
-    const { id } = req.query; // 予測IDを受け取る
-    if (!id) {
-      return res.status(400).json({ error: 'Missing prediction id parameter' });
+    const { url, id } = req.query;
+    let targetUrl = url;
+
+    // URLがデコードされていない場合や、idだけの場合のフォールバック
+    if (!targetUrl && id) {
+      targetUrl = `https://api.replicate.com/v1/predictions/${id}`;
+    }
+
+    if (!targetUrl) {
+      return res.status(400).json({ error: 'Missing url or id parameter' });
     }
 
     const token = process.env.REPLICATE_API_TOKEN;
@@ -28,8 +30,8 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'REPLICATE_API_TOKEN is not configured' });
     }
 
-    // VercelサーバーからReplicateのAPIへ安全に問い合わせる
-    const response = await fetch(`https://api.replicate.com/v1/predictions/${id}`, {
+    // Replicateへ安全にリクエストを転送
+    const response = await fetch(targetUrl, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -37,12 +39,8 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+    return res.status(response.status).json(data);
 
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Failed to fetch prediction status', detail: data });
-    }
-
-    return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
