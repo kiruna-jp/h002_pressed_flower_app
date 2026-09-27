@@ -54,8 +54,7 @@ export default async function handler(req, res) {
 
     const uploadedImageUrl = uploadData.urls.get;
 
-    // 2. バージョン指定ではなくモデル名（例: stability-ai/sdxlなど）で予測リクエストを送信
-    // ※もし別のモデル名を使いたい場合はここの model を書き換えます
+    // 2. 正しいリクエスト形式（versionのみを指定し、modelは使わない）
     const predictionRes = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
@@ -63,7 +62,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'stability-ai/sdxl', // またはお使いのモデル名
+        version: 'ac732df83cea7fff18b8472768c88ad041fa750ff7682a21e81fc13af4fe0e7b',
         input: {
           image: uploadedImageUrl,
           prompt: 'pressed flower style, botanical art, dried realistic flower petals, elegant vintage layout, high resolution, detailed texture',
