@@ -63,7 +63,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        version: '772223702f35463f87f31742a17424613fe67a295286520d293f0b2f520970a5',
+        version: 'bfaf7d9e235edabd87c48974a974b2f21136b69b76922312b1d3f972b2046ff9',
         input: {
           image: uploadedImageUrl,
           prompt: 'pressed flower style, botanical art, dried realistic flower petals, elegant vintage layout, high resolution, detailed texture',
